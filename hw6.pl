@@ -1,14 +1,29 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-my @jobsLocation = glob("/home/cst334/HW6/Job[0-9]*");
-my @burst;
+use List::Util qw(sum);
+my (@u_burst, @burst, $s_time, @sum, @wait_time);
 # get burst time
-for(@jobsLocation){
-	push @burst, `/usr/bin/time -f "%e" $_ | grep -v "Running"`;
+for(glob("/home/cst334/HW6/Job[0-9]*")){
+	$s_time = time();
+	system($_);
+	push @u_burst, (time() - $s_time);
 }
-map { $_ } 0 .. $#burst;
-# print burst time
-for(@burst) {
-	print $_ . '\n';
-}
+print "Burst times: " . join(' ', @u_burst) . "\n";
+# sort ascending order
+@burst = sort { $a <=> $b } @u_burst;
+print "Burst times sorted: " . join(' ', @burst) . "\n";
+unshift @burst, 0;
+@wait_time = map {
+	if($_ == 0) {
+		$burst[$_];
+	} else {
+		$burst[$_] += $burst[$_-1];
+	}
+} 0 .. $#burst;
+# print wait time
+print "Wait times: " . join(' ', @wait_time) . "\n";
+# print avg wait
+@sum = @wait_time;
+pop @sum;
+print "Average: " . sum(@sum)/$#wait_time . "\n";
