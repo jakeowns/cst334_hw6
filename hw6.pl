@@ -6,7 +6,7 @@ my (@u_burst, @burst, $s_time, @sum, @wait_time);
 # get burst time
 for(glob("/home/cst334/HW6/Job[0-9]*")){
 	$s_time = time();
-	system($_);
+	system($_ . " >/dev/null 2>&1");
 	push @u_burst, (time() - $s_time);
 }
 print "Burst times: " . join(' ', @u_burst) . "\n";
