@@ -7,7 +7,7 @@ my @burst;
 for(@jobsLocation){
 	push @burst, `/usr/bin/time -f "%e" $_ | grep -v "Running"`;
 }
-map { $_ }, 0 .. $#burst
+map { $_ } 0 .. $#burst;
 # print burst time
 for(@burst) {
 	print $_ . '\n';
