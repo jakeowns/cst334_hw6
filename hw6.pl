@@ -37,7 +37,6 @@ sub print_jobs {
 
 # init burst
 for ( glob("/home/cst334/HW6/Job[0-9]*") ) {
-  my $wait   = undef;
   my $s_time = time();                                 #Current Time
   system( $_ . " >/dev/null 2>&1" );                   #Run the script
   s{.*/}{};    #Greedy substitute remove directory till ends with Job
