@@ -11,7 +11,7 @@ sub calc_wait {
   my $jobs = shift;           #Get first arg
   for ( 0 .. $#{$jobs} ) {    #Start from 0 and end with array $jobs length
     if ( $_ == 0 ) {
-      $jobs->[$_]{wait} = 0;  #First job wait time is always 0
+      $jobs->[$_]{wait} = 0;    #First job wait time is always 0
     }
     else {
       #Current job wait time is the previous job's wait time + burst time
@@ -22,11 +22,12 @@ sub calc_wait {
 
 # print_jobs()
 sub print_jobs {
-  my $jobs = shift;      #Get first arg
+  my $jobs = shift;             #Get first arg
   my $sum  = 0;
   for ( @{$jobs} ) {
-    $sum += $_->{wait};  #Add all the wait time together
-    say $_->{name}       #Output the list of jobs with burst time and wait time
+    $sum += $_->{wait};   #Add all the wait time together
+    #Output the list of jobs with burst time and wait time
+    say $_->{name}
       . ' burst-time: '
       . $_->{burst}
       . 's wait-time: '
