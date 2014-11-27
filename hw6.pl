@@ -26,7 +26,7 @@ sub print_jobs {
   my $sum  = 0;
   for ( @{$jobs} ) {
     $sum += $_->{wait};   #Add all the wait time together
-    #Output the list of jobs with burst time and wait time
+                          #Output the list of jobs with burst time and wait time
     say $_->{name}
       . ' burst-time: '
       . $_->{burst}
@@ -37,24 +37,34 @@ sub print_jobs {
 }
 
 # init burst
-for ( glob("/home/cst334/HW6/Job[0-9]*") ) {
-  my $s_time = time();                                 #Current Time
-  system( $_ . " >/dev/null 2>&1" );                   #Run the script
-  s{.*/}{};    #Greedy substitute remove directory till ends with Job
-  push @u_burst, {
-    'name'  => $_,                  #Assign array key with "Job#"
-    'burst' => ( time() - $s_time ) #Get Burst Time from (end time - start time)
-  };
+sub run {
+  my ( $paths, $jobs ) = @_;
+  for ( @{$paths} ) {
+    my $s_time = time();                               #Current Time
+    my $path   = $_;
+    system( $_ . " >/dev/null 2>&1" );                 #Run the script
+    s{.*/}{};    #Greedy substitute remove directory till ends with Job
+    push @{$jobs}, {
+      'name' => $_,      #Assign array key with "Job#"
+      'path' => $path,
+      'burst' =>
+        ( time() - $s_time )    #Get Burst Time from (end time - start time)
+    };
+  }
 }
 
 # calc wait
 say "Before:";
+run( [ glob("/home/cst334/HW6/Job[0-9]*") ], \@u_burst );
 calc_wait( \@u_burst );
 print_jobs( \@u_burst );
 
 # sort and calc wait
 say "After:";
-@burst = sort { $a->{burst} <=> $b->{burst} } @u_burst;    #Sort ascending order
+my @sjf =
+  map { $_->{path} }    #Return list of sorted job paths
+  sort { $a->{burst} <=> $b->{burst} } @u_burst;    #Sort ascending order
+run( \@sjf, \@burst );
 calc_wait( \@burst );
 print_jobs( \@burst );
 __END__
