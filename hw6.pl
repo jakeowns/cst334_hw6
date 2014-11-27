@@ -4,7 +4,7 @@ use warnings;
 use feature qw(say);
 
 # Global Variables
-my ( @u_burst, @burst );
+my ( @u_burst, @burst, @sjf );
 
 # calc_wait()
 sub calc_wait {
@@ -61,7 +61,7 @@ print_jobs( \@u_burst );
 
 # sort and calc wait
 say "After:";
-my @sjf =
+@sjf =
   map { $_->{path} }    #Return list of sorted job paths
   sort { $a->{burst} <=> $b->{burst} } @u_burst;    #Sort ascending order
 run( \@sjf, \@burst );
